@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Player Example</title>
+</head>
+<body>
+  <button id=play>Play</button>
+  <button id=pause disabled>Pause</button>
+
+  <script src="/build/ogv.js"></script>
+  <script type="text/javascript">
+
+	var player = new OGVPlayer({
+					forceWebGL: true
+				});
+
+	var container = document.createElement('div');
+
+	container.appendChild(player);
+
+	document.body.appendChild(container);
+
+	play.addEventListener( 'click', function() {
+		play.disabled = true;
+		player.play();
+	});
+
+	pause.addEventListener( 'click', function() {
+		pause.disabled = true;
+		player.pause();
+	});
+
+	player.src = '/demo/media/demo.webm';
+
+	player.addEventListener('playing', function() {
+		play.disabled = true;
+		pause.disabled = false;
+	});
+
+	player.addEventListener('pause', function() {
+		play.disabled = false;
+		pause.disabled = true;
+	});
+
+  </script>
+</body>
+</html>
