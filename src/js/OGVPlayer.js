@@ -1394,11 +1394,14 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_drawFrame(buffer) {
-		console.log('====> suman orginal process video frame ACTUAL');
 		if (this._thumbnail) {
 			this.removeChild(this._thumbnail);
 			this._thumbnail = null;
 		}
+
+		// const time = new Date();
+		// const currentTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+		// console.log(' ====> Draw frame actual ', currentTime);
 		
 		this._frameSink.drawFrame(buffer);
 
@@ -1644,7 +1647,7 @@ class OGVPlayer extends OGVJSElement {
 		}
 		let iters = 0;
 		do {
-			console.log('loop processing for audio and video suman bogati');
+			// console.log('suman loop processing for audio and video suman bogati');
 			this._needProcessing = false;
 			this._depth++;
 			this._doProcessingLoop();
@@ -1662,8 +1665,8 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_doProcessingLoop() {
-		console.log('processing loop');
-		console.log(' player state before execute ', this._state);
+		// console.log('suman processing loop');
+		// console.log('suman  player state before execute ', this._state);
 		if (this._actionQueue.length) {
 			// data or user i/o to process in our serialized event stream
 			// The function should eventually bring us back here via pingProcessing(),
@@ -1714,7 +1717,7 @@ class OGVPlayer extends OGVJSElement {
 		if (this._state == 'READY') {
 			// this._paused = false;
 		}
-		console.log(' player state after execute ', this._state);
+		// console.log('suman  player state after execute ', this._state);
 	}
 
 	_doProcessInitial() {
@@ -1902,7 +1905,7 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_doProcessPlay() {
-		console.log('====> suman processPLay 1');
+		// console.log('suman ====> suman processPLay 1');
 		let codec = this._codec;
 
 		if (this._paused) {
@@ -1928,21 +1931,25 @@ class OGVPlayer extends OGVJSElement {
 					// ok to draw a couple ms early
 					fudgeDelta = timerMinimum;
 
-					console.log('======> SUMAN DO PROECSS PLAY INVOKE ');
+					// console.log('suman ======> SUMAN DO PROECSS PLAY INVOKE ');
 				if (codec.hasAudio && this._audioFeeder) {
 					// Drive on the audio clock!
-					console.log('======> SUMAN DO PROECSS PLAY INVOKE ======>');
+					// console.log('suman ======> SUMAN DO PROECSS PLAY INVOKE ======>');
 					audioState = this._audioFeeder.getPlaybackState();
 					playbackPosition = this._getPlaybackTime(audioState);
-					console.log('====> play back position ', playbackPosition);
+					// console.log('suman ====> play back position ', playbackPosition);
 					audioEnded = (this._dataEnded && this._audioFeeder.durationBuffered == 0);
-
+					// if (!this.sumanStartAudio) {
+					// 	console.log('audio feeder duration buffered ', this._audioFeeder.durationBuffered);
+					// }
+					
 					if (this._prebufferingAudio && (
 						(
 							this._audioFeeder.durationBuffered >= this._audioFeeder.bufferThreshold * 2 &&
 							(!codec.hasVideo || this._decodedFrames.length >= this._framePipelineDepth)
 						) || this._dataEnded)
 					) {
+						// this.sumanStartAudio = true;
 						this._log('prebuffering audio done; buffered to ' + this._audioFeeder.durationBuffered);
 						this._startPlayback(playbackPosition);
 						this._prebufferingAudio = false;
@@ -1975,13 +1982,13 @@ class OGVPlayer extends OGVJSElement {
 					// No audio; drive on the general clock.
 					// @fixme account for dropped frame times...
 					playbackPosition = this._getPlaybackTime();
-					console.log('====> play back position 2', playbackPosition);
+					// console.log('suman ====> play back position 2', playbackPosition);
 					// If playing muted with no audio output device,
 					// just keep up with audio in general.
 					readyForAudioDecode = this._codec.audioReady && (this._audioEndTimestamp < playbackPosition);
 				}
 
-				console.log('======> SUMAN DO PROECSS PLAY INVOKE ');
+				// console.log('suman ======> SUMAN DO PROECSS PLAY INVOKE ');
 				if (this._codec.hasVideo) {
 				//	console.log('======> SUMAN DO PROECSS PLAY INVOKE =====>');
 					readyForFrameDraw = this._decodedFrames.length > 0;
@@ -1991,16 +1998,16 @@ class OGVPlayer extends OGVJSElement {
 					// }
 
 					if (this._codec.frameReady) {
-						console.log('SUMAN FOUND VIDEO FRAME READY', this._codec.frameReady);
+						// console.log('suman SUMAN FOUND VIDEO FRAME READY', this._codec.frameReady);
 					} else {
-						console.log('SUMAN FOUND VIDEO FRAME READY NOT', this._codec.frameReady);
+						// console.log('suman SUMAN FOUND VIDEO FRAME READY NOT', this._codec.frameReady);
 					}
 
 					
 
 					readyForFrameDecode = (this._pendingFrame + this._decodedFrames.length < this._framePipelineDepth + this._frameParallelism) && this._codec.frameReady;
 					if (readyForFrameDecode) {
-						console.log('SUMAN FOUND VIDEO FRAME READY ACTUAL ========> ', this._codec.frameReady);
+						// console.log('suman SUMAN FOUND VIDEO FRAME READY ACTUAL ========> ', this._codec.frameReady);
 					} else {
 						
 					}
@@ -2094,10 +2101,10 @@ class OGVPlayer extends OGVJSElement {
 								this._doFrameComplete(frame);
 							}
 							if (this._isProcessing()) {
-								console.log('====> suman processPLay 3');
+								// console.log('suman ====> suman processPLay 3');
 								// wait
 							} else {
-								console.log('====> suman processPLay 2');
+								// console.log('suman ====> suman processPLay 2');
 								this._pingProcessing();
 							}
 							return;
@@ -2156,23 +2163,23 @@ class OGVPlayer extends OGVJSElement {
 								this._log('Bad video packet or something');
 							}
 							this._codec.process(() => {
-								console.log('suman media from player decode video ');
+								// console.log('suman suman media from player decode video ');
 								if (this._isProcessing()) {
 									// wait
-									console.log('====> suman processPLay 3');
+									// console.log('suman ====> suman processPLay 3');
 								} else {
-									console.log('====> suman processPLay 2');
+									// console.log('suman ====> suman processPLay 2');
 									this._pingProcessing(wasAsync ? undefined : 0);
 								}
 							});
 						});
 					});
 					if (this._pendingFrame) {
-						console.log('====> pending frame ', this._pendingFrame);
+						// console.log('suman ====> pending frame ', this._pendingFrame);
 						wasAsync = true;
 						this._proxyTime += frameDecodeTime;
 						// We can process something else while that's running
-						console.log('====> suman processPLay 2');
+						// console.log('suman ====> suman processPLay 2');
 						this._pingProcessing();
 
 						if (this._dataEnded) {
@@ -2194,7 +2201,7 @@ class OGVPlayer extends OGVJSElement {
 							if (ok) {
 								let buffer = this._codec.audioBuffer;
 								if (buffer) {
-									console.log('suman media from player decode audio ');
+									// console.log('suman suman media from player decode audio ');
 									// Keep track of how much time we spend queueing audio as well
 									// This is slow when using the Flash shim on IE 10/11
 									this._bufferTime += this._time(() => {
@@ -2213,7 +2220,7 @@ class OGVPlayer extends OGVJSElement {
 							}
 							if (this._isProcessing()) {
 								// wait
-								console.log('====> suman processPLay 3');
+								// console.log('suman ====> suman processPLay 3');
 							} else {
 								this._pingProcessing();
 							}
@@ -2223,7 +2230,7 @@ class OGVPlayer extends OGVJSElement {
 						this._proxyTime += audioDecodeTime;
 						// We can process something else while that's running
 						if (this._codec.audioReady) {
-							console.log('====> suman processPLay 2');
+							// console.log('suman ====> suman processPLay 2');
 							this._pingProcessing();
 						} else {
 							// Trigger a demux immediately if we need it;
@@ -2257,7 +2264,7 @@ class OGVPlayer extends OGVJSElement {
 					this._framesProcessed++;
 
 					this._doFrameComplete(frame);
-					console.log('====> suman processPLay 2');
+					// console.log('suman ====> suman processPLay 2');
 					this._pingProcessing();
 
 				} else if (this._decodedFrames.length && !this._nextFrameTimer && !this._prebufferingAudio) {
@@ -2267,7 +2274,7 @@ class OGVPlayer extends OGVJSElement {
 					this._log('play loop: setting a timer for drawing ' + targetTimer);
 					this._nextFrameTimer = setTimeout(() => {
 						this._nextFrameTimer = null;
-						console.log('====> suman processPLay 2');
+						// console.log('suman ====> suman processPLay 2');
 						this._pingProcessing();
 					}, targetTimer);
 
@@ -2279,7 +2286,7 @@ class OGVPlayer extends OGVJSElement {
 					}
 					if (finalDelay > 0) {
 						this._log('play loop: ending pending ' + finalDelay + ' ms');
-						console.log('====> suman processPLay 2');
+						// console.log('suman ====> suman processPLay 2');
 						this._pingProcessing(Math.max(0, finalDelay));
 					} else {
 						this._log('play loop: ENDING NOW: playback time ' + this._getPlaybackTime() + '; frameEndTimestamp: ' + this._frameEndTimestamp);
@@ -2298,7 +2305,7 @@ class OGVPlayer extends OGVJSElement {
 				) {
 
 					this._log('play loop: prebuffering demuxing');
-					console.log('====> suman processPLay 4 actual process');
+					// console.log('suman ====> suman processPLay 4 actual process');
 					this._doProcessPlayDemux();
 
 
@@ -2309,7 +2316,7 @@ class OGVPlayer extends OGVJSElement {
 				}
 
 			} else {
-				console.log('====> suman processPLay 4 actual process');
+				// console.log('suman ====> suman processPLay 4 actual process');
 				this._log('play loop: demuxing');
 
 				this._doProcessPlayDemux();
@@ -2347,11 +2354,11 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_doProcessPlayDemux() {
-		console.log('====> CHECK demux has packet or not');
+		// console.log('suman ====> CHECK demux has packet or not');
 		let wasFrameReady = this._codec.frameReady,
 			wasAudioReady = this._codec.audioReady;
 		this._codec.process((more) => {
-			console.log(' suman more ', more);
+			// console.log('suman  suman more ', more);
 			if ((this._codec.frameReady && !wasFrameReady) || (this._codec.audioReady && !wasAudioReady)) {
 				this._log('demuxer has packets');
 				this._pingProcessing();
@@ -2362,9 +2369,9 @@ class OGVPlayer extends OGVJSElement {
 			} else {
 
 				this.outofRanData = true;
-				console.log('suman out of ran data');
+				// console.log('suman suman out of ran data');
 				
-				console.log('congrea out of buffer 1');
+				// console.log('suman congrea out of buffer 1');
 
 				this._log('demuxer ran out of data');
 				if (!this._streamEnded) {
@@ -2449,13 +2456,13 @@ class OGVPlayer extends OGVJSElement {
 		if (data) {
 			sumanNum++;
 			this._log('got input ' + [data.byteLength]);
-			console.log('====> suman got input, suman media hello');
+			// console.log('suman ====> suman got input, suman media hello');
 	
 			if (data.byteLength) {
 				// Save chunk to pass into the codec's buffer
 				this._actionQueue.push(() => {
 					this._codec.receiveInput(data, () => {
-						console.log('got input, ping processing after input');
+						// console.log('suman got input, ping processing after input');
 						this._pingProcessing();
 					});
 				});
@@ -2479,8 +2486,8 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_pingProcessing(delay = -1) {
-		console.log('got input, ping processing after input 3');
-		console.log('====> Suman depth ', this._depth);
+		// console.log('suman got input, ping processing after input 3');
+		// console.log('suman ====> Suman depth ', this._depth);
 		if (this._stream && this._stream.waiting) {
 			// wait for this input pls
 			this._log('waiting on input');
@@ -2497,7 +2504,7 @@ class OGVPlayer extends OGVJSElement {
 			this._nextProcessingTimer = setTimeout(() => {
 				// run through pingProcessing again to check
 				// in case some io started asynchronously in the meantime
-				console.log('loop processing for audio and video suman bogati, DELAY ', delay)
+				// console.log('suman loop processing for audio and video suman bogati, DELAY ', delay)
 				this._pingProcessing();
 			}, delay);
 		} else if (this._depth) {
@@ -2588,6 +2595,7 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	_prepForLoad(preload) {
+		alert('suman bogati');
 		this._stopVideo();
 
 		let doLoad = () => {
@@ -2829,7 +2837,6 @@ class OGVPlayer extends OGVJSElement {
 	}
 
 	resetPlaybackStats() {
-		alert('suman');
 		this._framesProcessed = 0;
 		this._playTime = 0;
 		if (this._codec) {
